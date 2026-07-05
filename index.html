@@ -10,17 +10,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script>
+    document.documentElement.dataset.theme =
+      localStorage.getItem('gih-theme') ||
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  </script>
 </head>
 <body>
 
   <header class="nav">
     <a class="nav-mark" href="#top">GIH<span class="accent">·</span>VN</a>
-    <nav class="nav-links">
-      <a href="#vision">Vision</a>
-      <a href="#functions">Functions</a>
-      <a href="#impact">Impact</a>
-      <a href="#team">Team</a>
-    </nav>
+    <div class="nav-right">
+      <nav class="nav-links">
+        <a href="#vision">Vision</a>
+        <a href="#functions">Functions</a>
+        <a href="#impact">Impact</a>
+        <a href="#team">Team</a>
+      </nav>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle color scheme" title="Toggle color scheme"><span></span></button>
+    </div>
   </header>
 
   <main id="top">
@@ -206,9 +214,14 @@
       }
     ];
 
+    const mapStyles = {
+      light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+      dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
+    };
+
     const map = new maplibregl.Map({
       container: 'map',
-      style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+      style: mapStyles[document.documentElement.dataset.theme] || mapStyles.light,
       center: [106.5, 16.2],
       zoom: 4.3,
       minZoom: 3.5,
@@ -241,6 +254,14 @@
           .setPopup(popup)
           .addTo(map);
       }
+    });
+
+    // --- Color scheme switcher ---
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('gih-theme', next);
+      map.setStyle(mapStyles[next]);
     });
   </script>
 </body>
