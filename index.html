@@ -11,9 +11,7 @@
   <link href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script>
-    document.documentElement.dataset.theme =
-      localStorage.getItem('gih-theme') ||
-      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.dataset.accent = localStorage.getItem('gih-accent') || 'vermillion';
   </script>
 </head>
 <body>
@@ -27,7 +25,12 @@
         <a href="#impact">Impact</a>
         <a href="#team">Team</a>
       </nav>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle color scheme" title="Toggle color scheme"><span></span></button>
+      <div class="accent-switch" role="group" aria-label="Color scheme">
+        <button class="swatch" data-accent="vermillion" aria-label="Vermillion" title="Vermillion"></button>
+        <button class="swatch" data-accent="blue" aria-label="Blue" title="Blue"></button>
+        <button class="swatch" data-accent="green" aria-label="Green" title="Green"></button>
+        <button class="swatch" data-accent="purple" aria-label="Purple" title="Purple"></button>
+      </div>
     </div>
   </header>
 
@@ -214,16 +217,11 @@
       }
     ];
 
-    const mapStyles = {
-      light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-      dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
-    };
-
     const map = new maplibregl.Map({
       container: 'map',
-      style: mapStyles[document.documentElement.dataset.theme] || mapStyles.light,
-      center: [106.5, 16.2],
-      zoom: 4.3,
+      style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+      bounds: [[101.8, 8.0], [110.5, 23.5]],
+      fitBoundsOptions: { padding: 30 },
       minZoom: 3.5,
       maxZoom: 14,
       attributionControl: { compact: true },
@@ -232,37 +230,35 @@
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
-    map.on('load', () => {
-      map.fitBounds([[101.8, 8.0], [110.5, 23.5]], { padding: 30, duration: 0 });
+    for (const h of hubs) {
+      const el = document.createElement('div');
+      el.className = 'hub-marker';
 
-      for (const h of hubs) {
-        const el = document.createElement('div');
-        el.className = 'hub-marker';
+      const popup = new maplibregl.Popup({ offset: 18, closeButton: false, maxWidth: '280px' })
+        .setHTML(
+          '<article class="hub-card">' +
+            '<span class="hub-status">' + h.status + '</span>' +
+            '<h4>' + h.name + '</h4>' +
+            '<p class="hub-fn">' + h.hub + '</p>' +
+            '<p class="hub-blurb">' + h.blurb + '</p>' +
+          '</article>'
+        );
 
-        const popup = new maplibregl.Popup({ offset: 18, closeButton: false, maxWidth: '280px' })
-          .setHTML(
-            '<article class="hub-card">' +
-              '<span class="hub-status">' + h.status + '</span>' +
-              '<h4>' + h.name + '</h4>' +
-              '<p class="hub-fn">' + h.hub + '</p>' +
-              '<p class="hub-blurb">' + h.blurb + '</p>' +
-            '</article>'
-          );
-
-        new maplibregl.Marker({ element: el, anchor: 'center' })
-          .setLngLat(h.coords)
-          .setPopup(popup)
-          .addTo(map);
-      }
-    });
+      new maplibregl.Marker({ element: el, anchor: 'center' })
+        .setLngLat(h.coords)
+        .setPopup(popup)
+        .addTo(map);
+    }
 
     // --- Color scheme switcher ---
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      document.documentElement.dataset.theme = next;
-      localStorage.setItem('gih-theme', next);
-      map.setStyle(mapStyles[next]);
-    });
+    const swatches = document.querySelectorAll('.accent-switch .swatch');
+    const setAccent = (name) => {
+      document.documentElement.dataset.accent = name;
+      localStorage.setItem('gih-accent', name);
+      swatches.forEach(s => s.classList.toggle('active', s.dataset.accent === name));
+    };
+    swatches.forEach(s => s.addEventListener('click', () => setAccent(s.dataset.accent)));
+    setAccent(document.documentElement.dataset.accent);
   </script>
 </body>
 </html>
