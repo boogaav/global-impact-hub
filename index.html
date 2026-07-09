@@ -10,28 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <script>
-    document.documentElement.dataset.accent = localStorage.getItem('gih-accent') || 'vermillion';
-  </script>
 </head>
 <body>
 
   <header class="nav">
     <a class="nav-mark" href="#top">GIH<span class="accent">·</span>VN</a>
-    <div class="nav-right">
-      <nav class="nav-links">
-        <a href="#vision">Vision</a>
-        <a href="#functions">Functions</a>
-        <a href="#impact">Impact</a>
-        <a href="#team">Team</a>
-      </nav>
-      <div class="accent-switch" role="group" aria-label="Color scheme">
-        <button class="swatch" data-accent="vermillion" aria-label="Vermillion" title="Vermillion"></button>
-        <button class="swatch" data-accent="blue" aria-label="Blue" title="Blue"></button>
-        <button class="swatch" data-accent="green" aria-label="Green" title="Green"></button>
-        <button class="swatch" data-accent="purple" aria-label="Purple" title="Purple"></button>
-      </div>
-    </div>
+    <nav class="nav-links">
+      <a href="#vision">Vision</a>
+      <a href="#functions">Functions</a>
+      <a href="#impact">Impact</a>
+      <a href="#team">Team</a>
+    </nav>
   </header>
 
   <main id="top">
@@ -249,16 +238,6 @@
         .setPopup(popup)
         .addTo(map);
     }
-
-    // --- Color scheme switcher ---
-    const swatches = document.querySelectorAll('.accent-switch .swatch');
-    const setAccent = (name) => {
-      document.documentElement.dataset.accent = name;
-      localStorage.setItem('gih-accent', name);
-      swatches.forEach(s => s.classList.toggle('active', s.dataset.accent === name));
-    };
-    swatches.forEach(s => s.addEventListener('click', () => setAccent(s.dataset.accent)));
-    setAccent(document.documentElement.dataset.accent);
   </script>
 </body>
 </html>

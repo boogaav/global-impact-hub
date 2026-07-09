@@ -6,14 +6,10 @@
   --ink: #1c1b18;
   --muted: #6f6a60;
   --line: #e2dcd2;
-  --accent: #c8391e; /* vermillion */
+  --accent: #1e7a4e; /* forest green */
   --serif: "Fraunces", Georgia, serif;
   --sans: "Inter", -apple-system, sans-serif;
 }
-
-[data-accent="blue"]   { --accent: #1e4fc2; }
-[data-accent="green"]  { --accent: #1e7a4e; }
-[data-accent="purple"] { --accent: #6a3fb5; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -26,7 +22,6 @@ body {
   font-size: 17px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .accent { color: var(--accent); }
@@ -71,39 +66,6 @@ a { color: inherit; }
 }
 
 .nav-links a:hover { color: var(--accent); }
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: clamp(16px, 3vw, 36px);
-}
-
-.accent-switch {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.swatch {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.swatch[data-accent="vermillion"] { background: #c8391e; }
-.swatch[data-accent="blue"]       { background: #1e4fc2; }
-.swatch[data-accent="green"]      { background: #1e7a4e; }
-.swatch[data-accent="purple"]     { background: #6a3fb5; }
-
-.swatch:hover { transform: scale(1.2); }
-
-.swatch.active {
-  box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink);
-}
 
 /* ---------- layout ---------- */
 main {
